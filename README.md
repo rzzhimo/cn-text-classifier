@@ -1,7 +1,8 @@
 # cn-text-classifier
 ## 感谢
 >  十分感谢原项目的作者，参考了原作者的项目，并增加了自己的代码，主要包括去重，注册
-> 成微服务，和java项目联通。原项目README.md保留如下。
+> 成微服务，和java项目联通。原项目README.md保留如下。  
+> **原项目地址为:**  [cn-text-classifier](https://github.com/FesonX/cn-text-classifier)
 ## 中文文本聚类实验
 ## Chinese Text Cluster Experiments
 
