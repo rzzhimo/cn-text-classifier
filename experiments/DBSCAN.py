@@ -14,13 +14,17 @@ import pandas as pd
 from sklearn import metrics
 import matplotlib.pyplot as plt
 
+from sklearn.cluster import DBSCAN
+import math
+import copy
+import numpy as np
 """
 loading source
 载入资源
 文件详情参照本文件夹README
 """
 print('------Loading Source...')
-ori_path = settings.SOURCE_DATA + 'cut_data.csv'
+ori_path = settings.SOURCE_DATA + 'y_cut_data.csv'
 sentences = loading_source(file_name=ori_path)
 # start = time.time()
 # end = time.time()
@@ -56,7 +60,7 @@ print('------ vectorizer cost', end-start)
 Dimension Reduction
 降维
 """
-pca = PCA(n_components=8)
+pca = PCA(n_components=5)
 trainingData = pca.fit_transform(weight)
 
 
@@ -68,7 +72,7 @@ numOfClass: int = 4
 
 start = time.time()
 # db = DBSCAN(eps=0.08, min_samples=7)
-db = DBSCAN(eps=0.08, min_samples=7)
+db = DBSCAN(eps=0.001, min_samples=3.7)
 
 
 result = db.fit(trainingData)
@@ -104,7 +108,7 @@ def plot_res(labels: list, n_cluster: int, num: int):
         plt.plot(xy[:, 0], xy[:, 1], 'o', markerfacecolor=col,
                  markeredgecolor='k', markersize=6)
     plt.title('DBSCAN')
-    plt.savefig(settings.PLOT_DIR + 'db-%d-%d.png' % (n_cluster, num))
+    # plt.savefig(settings.PLOT_DIR + 'db-%d-%d.png' % (n_cluster, num))
     plt.show()
 
 
@@ -114,31 +118,32 @@ Result
 """
 n_clusters_ = len(set(label)) - (1 if -1 in label else 0)
 n_noise_ = int(list(label).count(-1))
+print('Estimated number of n_clucster: %d \n' % n_clusters_)
 print('Estimated number of noise points: %d \n' % n_noise_)
 
-content = pd.read_csv(settings.SOURCE_DATA + 'labeled_data.csv')
-labels_true = content.flag.to_list()
-
-ars = metrics.adjusted_rand_score(labels_true, label)
-print("adjusted_rand_score: ", ars)
-
-fmi = metrics.adjusted_rand_score(labels_true, label)
-print("FMI: ", fmi)
+# content = pd.read_csv(settings.SOURCE_DATA + 'labeled_data.csv')
+# labels_true = content.flag.to_list()
+#
+# ars = metrics.adjusted_rand_score(labels_true, label)
+# print("adjusted_rand_score: ", ars)
+#
+# fmi = metrics.adjusted_rand_score(labels_true, label)
+# print("FMI: ", fmi)
 
 silhouette = metrics.silhouette_score(trainingData, label)
 print("silhouette: ", silhouette)
 
-CHI = metrics.calinski_harabaz_score(trainingData, label)
+CHI = metrics.calinski_harabasz_score(trainingData, label)
 print("CHI: ", CHI)
 
 
-with open(settings.DST_DATA+time.strftime("%Y-%m-%d %H-%M-%S", time.localtime())+'result.txt', 'w') as w:
-    w.write("------DBSCAN Experiment-------\n")
-    w.write("adjusted_rand_score: %f\n" % ars)
-    w.write("FMI: %f\n" % fmi)
-    w.write("Silhouette: %f\n" % silhouette)
-    w.write("CHI: %f\n" % CHI)
-    w.write('Estimated number of noise points: %d \n' % n_noise_)
-    w.write("------End------")
+# with open(settings.DST_DATA+time.strftime("%Y-%m-%d %H-%M-%S", time.localtime())+'result.txt', 'w') as w:
+#     w.write("------DBSCAN Experiment-------\n")
+#     w.write("adjusted_rand_score: %f\n" % ars)
+#     w.write("FMI: %f\n" % fmi)
+#     w.write("Silhouette: %f\n" % silhouette)
+#     w.write("CHI: %f\n" % CHI)
+#     w.write('Estimated number of noise points: %d \n' % n_noise_)
+#     w.write("------End------")
 
 plot_res(label, n_clusters_, n_clusters_)

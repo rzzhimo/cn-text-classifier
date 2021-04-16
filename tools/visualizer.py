@@ -28,7 +28,7 @@ def plot_cluster(result, trainingData, numOfClass):
 
 def plot_result(data, cluster_res, cluster_num, algorithm='None'):
     nPoints = len(data)
-    scatter_colors = ['blue', 'green', 'yellow', 'red', 'purple', 'orange', 'brown']
+    scatter_colors = ['red', 'orange', 'yellow', 'green', 'cyan', 'blue', 'purple','pink','brown','gray','yellowgreen','aliceblue','antiquewhite','aqua','aquamarine','azure']
     for i in range(cluster_num):
         color = scatter_colors[i % len(scatter_colors)]
         x1 = []
@@ -38,8 +38,9 @@ def plot_result(data, cluster_res, cluster_num, algorithm='None'):
                 x1.append(data[j, 0])
                 y1.append(data[j, 1])
         plt.scatter(x1, y1, c=color, alpha=1, marker='o')
+        print('类 %d 舆情数目为: '%i,len(x1))
         plt.plot(marksize=10)
-    plt.savefig(PLOT_DIR + algorithm + '-' + str(random.randint(10, 100)) + str(cluster_num) + '.png')
+    #plt.savefig(PLOT_DIR + algorithm + '-' + str(random.randint(10, 100)) + str(cluster_num) + '.png')
     plt.show()
 
 
